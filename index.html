@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عبدالله ماجد انذير | مهندس مساحة و GIS — Basra, Iraq</title>
+<meta name="description" content="عبدالله ماجد انذير، مهندس مساحة وGIS في البصرة، العراق. خبرة في المسح الطبوغرافي، خطوط الأنابيب، As-Built، وتحليل البيانات الجغرافية لمشاريع النفط والغاز والبنية التحتية.">
+<meta name="keywords" content="Surveying Engineer, GIS Engineer, Basra Iraq, Total Station, GNSS, Civil 3D, ArcGIS, Pipeline Survey, Oil and Gas Surveyor">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="عبدالله ماجد انذير | مهندس مساحة و GIS">
+<meta property="og:description" content="مهندس مساحة وGIS متخصص في مشاريع النفط والغاز والبنية التحتية — البصرة، العراق.">
+<meta property="og:image" content="og-cover.jpg">
+<meta property="og:locale" content="ar_IQ">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Abdullah Majid Intheer",
+  "jobTitle": "Surveying Engineer | GIS Engineer",
+  "address": {"@type":"PostalAddress","addressLocality":"Zubair, Basra","addressCountry":"IQ"},
+  "email": "mailto:abdullahinthaiyer@gmail.com",
+  "telephone": "+9647838909213",
+  "sameAs": ["https://www.linkedin.com/in/abdullah-majid12"]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg-alt:#111111;
+    --panel:#161616;
+    --line:#2c2c2c;
+    --text:#f5f5f5;
+    --text-dim:#8f8f8f;
+    --brass:#d8d8d8;
+    --brass-bright:#ffffff;
+    --cyan:#9aa3ab;
+    --bg-rgb:10,10,10;
+  }
+  body.light-theme{
+    --bg:#f6f6f4;
+    --bg-alt:#eeeeec;
+    --panel:#ffffff;
+    --line:#dcdcd9;
+    --text:#141414;
+    --text-dim:#63666a;
+    --brass:#3c3c3c;
+    --brass-bright:#000000;
+    --cyan:#4a4d50;
+    --bg-rgb:246,246,244;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Tajawal',sans-serif;
+    overflow-x:hidden;
+    transition:background .35s ease, color .35s ease;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  .grid-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:.18;
+    mask-image:radial-gradient(ellipse at 50% 0%, black 10%, transparent 75%);
+  }
+
+  section{position:relative;z-index:1;}
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;right:0;left:0;z-index:50;
+    display:flex;justify-content:center;
+    padding:16px 20px;
+    background:linear-gradient(to bottom, rgba(var(--bg-rgb),.94), rgba(var(--bg-rgb),0));
+  }
+  nav .inner{
+    display:flex;align-items:center;gap:22px;
+    font-size:13px;color:var(--text-dim);
+    max-width:100%;overflow-x:auto;
+    scrollbar-width:none;
+  }
+  nav .inner::-webkit-scrollbar{display:none;}
+  nav a{color:var(--text-dim);text-decoration:none;transition:color .2s;white-space:nowrap;}
+  nav a:hover{color:var(--brass-bright);}
+  nav .brand{color:var(--text);font-weight:700;letter-spacing:.02em;}
+
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    padding:120px 24px 80px;
+  }
+  .coord-tag{
+    font-size:12px;letter-spacing:.1em;color:var(--cyan);
+    margin-bottom:28px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .coord-tag::before,.coord-tag::after{content:'';width:28px;height:1px;background:var(--cyan);opacity:.5;}
+
+  .avatar{
+    width:148px;height:148px;border-radius:50%;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:34px;
+    background:radial-gradient(circle at 35% 30%, var(--panel), var(--bg) 70%);
+    border:1px solid var(--line);
+  }
+  .avatar::before{
+    content:'';position:absolute;inset:-14px;
+    border-radius:50%;
+    border:1px dashed rgba(201,161,92,.35);
+  }
+  .avatar .tick{position:absolute;background:var(--brass);opacity:.6;}
+  .avatar .tick.n{top:-2px;left:50%;width:1px;height:12px;transform:translateX(-50%);}
+  .avatar .tick.s{bottom:-2px;left:50%;width:1px;height:12px;transform:translateX(-50%);}
+  .avatar .tick.e{right:-2px;top:50%;height:1px;width:12px;transform:translateY(-50%);}
+  .avatar .tick.w{left:-2px;top:50%;height:1px;width:12px;transform:translateY(-50%);}
+  .avatar .initials{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:40px;font-weight:500;color:var(--brass-bright);
+    letter-spacing:.04em;
+  }
+
+  h1.name{
+    font-size:clamp(34px,6vw,58px);
+    font-weight:900;
+    letter-spacing:-.01em;
+    line-height:1.15;
+    margin-bottom:14px;
+  }
+  h1.name span{color:var(--brass-bright);}
+
+  .title-line{
+    font-size:clamp(16px,2.2vw,20px);
+    color:var(--text-dim);
+    font-weight:400;
+    margin-bottom:36px;
+  }
+  .title-line b{color:var(--text);font-weight:500;}
+
+  .hero-meta{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:14px;
+    max-width:640px;
+  }
+  .chip{
+    display:flex;align-items:center;gap:8px;
+    padding:9px 18px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    font-size:13px;color:var(--text-dim);
+    background:rgba(255,255,255,.02);
+    text-decoration:none;
+    transition:border-color .2s, color .2s;
+  }
+  .chip:hover{border-color:var(--brass);color:var(--text);}
+  .chip svg{width:14px;height:14px;stroke:var(--cyan);flex-shrink:0;}
+
+  .scroll-cue{
+    position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+    font-size:11px;color:var(--text-dim);letter-spacing:.1em;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .scroll-cue .bar{width:1px;height:34px;background:linear-gradient(var(--brass),transparent);}
+
+  /* SECTION HEADERS */
+  .section-inner{max-width:1000px;margin:0 auto;padding:100px 24px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.16em;color:var(--brass);
+    margin-bottom:12px;display:block;
+  }
+  .eyebrow .mono{color:var(--text-dim);margin-left:8px;}
+  h2.section-title{
+    font-size:clamp(28px,4vw,42px);
+    font-weight:700;letter-spacing:-.01em;
+    margin-bottom:16px;
+  }
+  .section-sub{color:var(--text-dim);max-width:640px;font-size:16px;line-height:1.85;margin-bottom:56px;}
+
+  .alt-bg{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+
+  /* FLOATING CONTROLS */
+  .fab-stack{
+    position:fixed;bottom:26px;left:22px;z-index:60;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .fab{
+    width:46px;height:46px;border-radius:50%;
+    background:var(--panel);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text);cursor:pointer;
+    transition:border-color .25s ease, transform .25s ease, background .3s ease;
+    box-shadow:0 8px 20px -10px rgba(0,0,0,.5);
+  }
+  .fab:hover{border-color:var(--brass-bright);transform:translateY(-3px);}
+  .fab:active{transform:translateY(0);}
+  .fab svg{width:19px;height:19px;stroke:currentColor;fill:none;}
+  .fab.theme-fab svg{width:20px;height:20px;}
+  @media(max-width:640px){
+    .fab-stack{bottom:18px;left:14px;}
+    .fab{width:42px;height:42px;}
+  }
+
+  /* IMAGE PLACEHOLDER SLOTS */
+  .img-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:22px;}
+  .img-slot{
+    aspect-ratio:4/3;border-radius:12px;
+    border:1.5px dashed var(--line);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    color:var(--text-dim);font-size:12px;text-align:center;padding:14px;
+    background:rgba(255,255,255,.015);
+  }
+  .img-slot svg{width:26px;height:26px;stroke:var(--text-dim);opacity:.7;}
+  .img-slot b{color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:10.5px;display:block;margin-top:2px;direction:ltr;}
+
+  /* MODAL */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.72);
+    display:none;align-items:center;justify-content:center;z-index:100;padding:24px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--panel);border:1px solid var(--line);border-radius:20px;
+    max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:36px;position:relative;
+  }
+  .modal-close{
+    position:absolute;top:18px;left:18px;width:34px;height:34px;border-radius:50%;
+    background:var(--bg-alt);border:1px solid var(--line);color:var(--text);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .modal-close svg{width:16px;height:16px;}
+  .modal-box h3{font-size:22px;font-weight:700;margin-bottom:6px;}
+  .modal-box .m-sub{font-size:13px;color:var(--cyan);font-family:'IBM Plex Mono',monospace;margin-bottom:18px;}
+  .modal-box p{font-size:14px;color:var(--text-dim);line-height:1.85;margin-bottom:16px;}
+  .modal-box h5{font-size:12px;letter-spacing:.06em;color:var(--brass);margin-bottom:8px;font-family:'IBM Plex Mono',monospace;}
+  .modal-box .m-section{margin-bottom:18px;}
+
+  /* MAP LAYER CONTROL */
+  .layer-toggles{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+  .layer-toggle{
+    display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-dim);
+    border:1px solid var(--line);padding:8px 14px;border-radius:999px;cursor:pointer;user-select:none;
+    background:var(--panel);
+  }
+  .layer-toggle input{accent-color:var(--brass-bright);}
+  .layer-toggle.active{color:var(--text);border-color:var(--brass);}
+
+  /* CV BUTTON */
+  .cv-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 24px;border-radius:999px;
+    background:var(--brass-bright);color:var(--bg);
+    font-size:14px;font-weight:700;text-decoration:none;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .cv-btn:hover{transform:translateY(-2px);opacity:.92;}
+  .cv-btn svg{width:16px;height:16px;stroke:var(--bg);}
+  .cv-btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text);}
+  .cv-btn.ghost svg{stroke:var(--text);}
+
+  /* STATS */
+  .stats-row{
+    display:grid;grid-template-columns:repeat(5,1fr);
+    gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;
+  }
+  .stat-cell{background:var(--panel);padding:30px 14px;text-align:center;}
+  .stat-num{font-family:'IBM Plex Mono',monospace;font-size:clamp(24px,4vw,36px);font-weight:700;color:var(--brass-bright);}
+  .stat-lbl{font-size:12.5px;color:var(--text-dim);margin-top:8px;line-height:1.5;}
+  @media(max-width:780px){.stats-row{grid-template-columns:repeat(2,1fr);}}
+
+  /* PROJECTS */
+  .project-card{
+    border:1px solid var(--line);border-radius:20px;background:var(--panel);
+    overflow:hidden;margin-bottom:32px;
+  }
+  .project-card:last-child{margin-bottom:0;}
+  .project-visual{
+    height:200px;position:relative;overflow:hidden;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:26px 26px;
+    background-color:var(--bg-alt);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .project-visual svg{width:60%;height:70%;opacity:.85;}
+  .project-visual .pv-tag{
+    position:absolute;top:16px;left:18px;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;color:var(--text-dim);letter-spacing:.08em;
+    border:1px solid var(--line);padding:4px 10px;border-radius:999px;background:var(--panel);
+  }
+  .project-body{padding:34px;}
+  .project-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px;}
+  .project-head h3{font-size:22px;font-weight:700;}
+  .project-head .p-client{font-size:13px;color:var(--cyan);font-family:'IBM Plex Mono',monospace;}
+  .project-desc{color:var(--text-dim);font-size:14.5px;line-height:1.85;margin:14px 0 22px;}
+  .project-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:16px;margin-bottom:24px;}
+  .p-stat{border-top:1px solid var(--line);padding-top:10px;}
+  .p-stat .p-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:18px;color:var(--brass-bright);}
+  .p-stat .p-lbl{font-size:12px;color:var(--text-dim);margin-top:4px;}
+  .project-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  .project-cols h5{font-size:12px;letter-spacing:.06em;color:var(--brass);margin-bottom:10px;font-family:'IBM Plex Mono',monospace;}
+  .project-cols ul{color:var(--text-dim);font-size:14px;line-height:1.85;padding-right:18px;}
+  .project-cols ul li::marker{color:var(--brass);}
+  @media(max-width:640px){.project-cols{grid-template-columns:1fr;}}
+
+  /* GIS GALLERY */
+  .gis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+  .gis-card{
+    border:1px solid var(--line);border-radius:16px;padding:26px 22px;background:var(--panel);
+    transition:border-color .2s, transform .2s;
+  }
+  .gis-card:hover{border-color:#5a5a5a;transform:translateY(-3px);}
+  .gis-icon{width:38px;height:38px;color:var(--brass-bright);margin-bottom:16px;}
+  .gis-icon svg{width:100%;height:100%;}
+  .gis-card h4{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .gis-card p{font-size:12.5px;color:var(--text-dim);line-height:1.7;}
+
+  /* ACHIEVEMENTS */
+  .ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+  .ach-card{
+    display:flex;gap:16px;align-items:flex-start;
+    border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--panel);
+  }
+  .ach-icon{width:34px;height:34px;flex-shrink:0;color:var(--brass-bright);}
+  .ach-icon svg{width:100%;height:100%;}
+  .ach-card p{font-size:14px;color:var(--text-dim);line-height:1.7;}
+
+  /* CERT VISUAL CARDS */
+  .cert-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;margin-bottom:48px;}
+  .cert-card{
+    border:1px solid var(--line);border-radius:16px;padding:24px 18px;text-align:center;background:var(--panel);
+  }
+  .cert-card .cert-icon{width:36px;height:36px;margin:0 auto 14px;color:var(--brass-bright);}
+  .cert-card .cert-icon svg{width:100%;height:100%;}
+  .cert-card h4{font-size:14px;font-weight:700;margin-bottom:4px;}
+  .cert-card span{font-size:11.5px;color:var(--text-dim);display:block;}
+
+  /* TESTIMONIALS */
+  .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;}
+  .testi-card{border:1px solid var(--line);border-radius:16px;padding:28px;background:var(--panel);}
+  .testi-card .quote-mark{font-family:Georgia,serif;font-size:36px;color:var(--brass);line-height:1;margin-bottom:8px;display:block;}
+  .testi-card p{font-size:14px;color:var(--text-dim);line-height:1.85;font-style:italic;margin-bottom:18px;}
+  .testi-who{font-size:13px;font-weight:700;}
+  .testi-role{font-size:12px;color:var(--text-dim);}
+  .testi-note{
+    margin-top:20px;font-size:12.5px;color:var(--text-dim);
+    border:1px dashed var(--line);border-radius:12px;padding:14px 18px;
+  }
+
+  /* MAP */
+  #liveMap{width:100%;height:420px;border-radius:18px;border:1px solid var(--line);filter:grayscale(.35) contrast(1.05);}
+  .map-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;}
+  .map-legend .lg-item{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-dim);}
+  .map-legend .dot{width:10px;height:10px;border-radius:50%;}
+
+  /* EQUIPMENT */
+  .equip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;}
+  .equip-card{
+    position:relative;
+    border:1px solid var(--line);border-radius:20px;
+    padding:38px 30px;background:var(--panel);
+    overflow:hidden;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .equip-card:hover{border-color:#4a4a4a;transform:translateY(-4px);}
+  .equip-card .equip-tag{
+    position:absolute;top:20px;left:22px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    color:var(--text-dim);letter-spacing:.08em;
+  }
+  .equip-icon{width:84px;height:84px;margin:10px auto 22px;color:var(--brass-bright);}
+  .equip-icon svg{width:100%;height:100%;}
+  .equip-card h3{font-size:19px;font-weight:700;text-align:center;margin-bottom:10px;}
+  .equip-card p{font-size:14px;color:var(--text-dim);line-height:1.85;text-align:center;}
+  .equip-card .equip-spec{
+    margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);
+    display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  }
+  .equip-spec .tag{font-size:11px;}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:56px;}
+  .about-grid p{color:var(--text-dim);font-size:16px;line-height:1.95;margin-bottom:16px;}
+  .about-grid p b{color:var(--text);font-weight:500;}
+  .fact-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line);}
+  .fact{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .fact span:first-child{color:var(--text-dim);}
+  .fact span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--brass-bright);text-align:left;}
+
+  /* EXPERIENCE TIMELINE */
+  .timeline{position:relative;padding-right:32px;border-right:1px solid var(--line);}
+  .tl-item{position:relative;padding-bottom:56px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:'';position:absolute;right:-37px;top:4px;
+    width:11px;height:11px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--brass);
+  }
+  .tl-role{font-size:20px;font-weight:700;margin-bottom:4px;}
+  .tl-org{font-size:14px;color:var(--cyan);font-family:'IBM Plex Mono',monospace;margin-bottom:18px;display:block;}
+  .tl-item ul{color:var(--text-dim);font-size:15px;line-height:1.9;padding-right:20px;display:flex;flex-direction:column;gap:10px;}
+  .tl-item ul li::marker{color:var(--brass);}
+  .tl-item ul li b{color:var(--text);font-weight:500;}
+
+  /* SKILLS */
+  .skills-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:18px;overflow:hidden;
+    margin-bottom:60px;
+  }
+  .skill-card{
+    background:var(--panel);
+    padding:32px 28px;
+    display:flex;flex-direction:column;gap:18px;
+    transition:background .25s ease;
+  }
+  .skill-card:hover{background:#1a2129;}
+  .skill-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass);}
+  .skill-icon{
+    width:44px;height:44px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(79,209,197,.08);
+    border:1px solid rgba(79,209,197,.25);
+  }
+  .skill-icon svg{width:22px;height:22px;stroke:var(--cyan);}
+  .skill-card h3{font-size:18px;font-weight:700;margin-bottom:2px;}
+  .skill-card p{font-size:14px;color:var(--text-dim);line-height:1.75;}
+
+  /* TAG CLUSTERS (tools / equipment) */
+  .cluster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;}
+  .cluster{border:1px solid var(--line);border-radius:16px;padding:26px;background:var(--panel);}
+  .cluster h4{font-size:13px;letter-spacing:.06em;color:var(--brass-bright);margin-bottom:16px;font-family:'IBM Plex Mono',monospace;}
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{
+    font-size:13px;padding:6px 12px;border-radius:8px;
+    background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--text-dim);
+  }
+
+  /* EDUCATION + CERTS */
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+  .info-card{border:1px solid var(--line);border-radius:16px;padding:28px;background:var(--panel);}
+  .info-card .yr{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--cyan);margin-bottom:10px;display:block;}
+  .info-card h3{font-size:18px;font-weight:700;margin-bottom:6px;}
+  .info-card .org{font-size:14px;color:var(--text-dim);margin-bottom:10px;display:block;}
+  .info-card p{font-size:14px;color:var(--text-dim);line-height:1.8;}
+  .info-card .badge{display:inline-block;margin-top:12px;font-size:12px;color:var(--brass-bright);border:1px solid var(--brass);border-radius:999px;padding:4px 12px;}
+
+  .cert-list{display:flex;flex-direction:column;gap:0;}
+  .cert-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);}
+  .cert-row:first-child{border-top:1px solid var(--line);}
+  .cert-row .c-name{font-size:15px;font-weight:500;}
+  .cert-row .c-desc{font-size:13px;color:var(--text-dim);margin-top:4px;}
+  .cert-row .c-date{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass-bright);white-space:nowrap;}
+  .cert-group{margin-bottom:44px;}
+  .cert-group:last-child{margin-bottom:0;}
+  .cert-group h4{font-size:13px;letter-spacing:.08em;color:var(--brass);margin-bottom:6px;font-family:'IBM Plex Mono',monospace;}
+
+  /* LANGUAGES */
+  .lang-row{display:flex;gap:40px;flex-wrap:wrap;}
+  .lang-item{flex:1;min-width:220px;}
+  .lang-item .l-name{font-size:18px;font-weight:700;margin-bottom:10px;}
+  .bar-track{height:6px;border-radius:4px;background:var(--line);overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--brass),var(--cyan));border-radius:4px;}
+  .lang-item .l-level{font-size:13px;color:var(--text-dim);margin-top:8px;}
+
+  /* CONTACT */
+  .contact-wrap{text-align:center;}
+  .contact-wrap .section-sub{margin-left:auto;margin-right:auto;}
+  .social-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:10px;}
+  .social-btn{
+    display:flex;align-items:center;gap:12px;
+    padding:16px 24px;border:1px solid var(--line);border-radius:14px;
+    text-decoration:none;color:var(--text);background:var(--panel);
+    transition:all .25s ease;min-width:230px;justify-content:flex-start;
+  }
+  .social-btn:hover{border-color:var(--brass);transform:translateY(-3px);box-shadow:0 12px 30px -12px rgba(0,0,0,.6);}
+  .social-btn .ic{
+    width:38px;height:38px;border-radius:10px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;background:rgba(201,161,92,.1);
+  }
+  .social-btn .ic svg{width:18px;height:18px;stroke:var(--brass-bright);}
+  .social-btn .lbl{text-align:right;}
+  .social-btn .lbl small{display:block;color:var(--text-dim);font-size:11px;margin-bottom:2px;}
+  .social-btn .lbl span{font-size:13px;font-weight:500;font-family:'IBM Plex Mono',monospace;direction:ltr;display:block;word-break:break-all;}
+
+  footer{text-align:center;padding:40px 24px;color:var(--text-dim);font-size:12px;border-top:1px solid var(--line);}
+  footer .mono{color:#5b6670;}
+
+  @media(max-width:780px){
+    .about-grid{grid-template-columns:1fr;}
+  }
+  @media(max-width:640px){
+    .section-inner{padding:72px 18px;}
+    .social-btn{min-width:0;width:100%;}
+    .timeline{padding-right:24px;}
+    .tl-item::before{right:-29px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="inner">
+    <div class="brand mono">A.M.I</div>
+    <a href="#about">نبذة</a>
+    <a href="#equipment">المعدات</a>
+    <a href="#experience">الخبرة</a>
+    <a href="#projects">المشاريع</a>
+    <a href="#gis-portfolio">GIS Portfolio</a>
+    <a href="#services">الخدمات</a>
+    <a href="#skills">مهاراتي</a>
+    <a href="#education">التعليم</a>
+    <a href="#certs">الشهادات</a>
+    <a href="#contact">تواصل معي</a>
+    <a href="Abdullah_Majid_CV.pdf" download class="cv-btn" style="padding:8px 16px;font-size:12.5px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+      CV
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="coord-tag mono">30.5085° N , 47.7804° E — BASRA, IQ</div>
+
+  <!--
+    ★ لإضافة صورتك الشخصية الحقيقية بدل الحروف الأولى:
+    1) ارفع صورتك بجانب هذا الملف باسم مثلاً: profile-photo.jpg
+    2) استبدل السطر <div class="initials">AM</div> بالسطر التالي:
+       <img src="profile-photo.jpg" alt="عبدالله ماجد انذير" style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+    الأفضل: صورة رسمية بخلفية محايدة، أو صورة ميدانية بجانب Total Station.
+  -->
+  <div class="avatar">
+    <span class="tick n"></span><span class="tick s"></span><span class="tick e"></span><span class="tick w"></span>
+    <div class="initials">AM</div>
+  </div>
+
+  <h1 class="name">عبدالله ماجد <span>انذير</span></h1>
+  <p class="title-line"><b>مهندس مساحة</b> و <b>مهندس نظم معلومات جغرافية GIS</b></p>
+
+  <div class="hero-meta">
+    <a class="chip" href="https://www.google.com/maps/search/?api=1&query=%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82+%D8%A7%D9%84%D8%A8%D8%B5%D8%B1%D8%A9+%D9%82%D8%B6%D8%A7%D8%A1+%D8%A7%D9%84%D8%B2%D8%A8%D9%8A%D8%B1+%D8%B4%D8%AF%D8%A7%D8%AF+%D8%A7%D9%84%D9%81%D8%A7%D8%B1%D8%B3" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+      البصرة، قضاء الزبير، شداد الفارس
+    </a>
+    <div class="chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 7l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+      متاح للتعاون في مشاريع المساحة والـ GIS
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:28px;">
+    <a href="Abdullah_Majid_CV.pdf" download class="cv-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+      تحميل CV
+    </a>
+    <a href="Abdullah_Majid_CV.pdf" target="_blank" rel="noopener" class="cv-btn ghost">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      معاينة السيرة الذاتية
+    </a>
+  </div>
+
+  <div class="scroll-cue">
+    <span>مرر للأسفل</span>
+    <div class="bar"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="alt-bg">
+  <div class="section-inner" style="padding-top:60px;padding-bottom:60px;">
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-num" data-count="5">0</div><div class="stat-lbl">سنوات خبرة+</div></div>
+      <div class="stat-cell"><div class="stat-num" data-count="800">0</div><div class="stat-lbl">وحدة سكنية تم مسحها+</div></div>
+      <div class="stat-cell"><div class="stat-num" data-count="17">0</div><div class="stat-lbl">كم محاذاة أنابيب</div></div>
+      <div class="stat-cell"><div class="stat-num" data-count="12">0</div><div class="stat-lbl">نقطة ضبط تم تأسيسها+</div></div>
+      <div class="stat-cell"><div class="stat-num" data-count="4">0</div><div class="stat-lbl">مشاريع رئيسية</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPMENT -->
+<section id="equipment" class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">FIELD INSTRUMENTATION</span></span>
+    <h2 class="section-title">المعدات المساحية</h2>
+    <p class="section-sub">أعمل بأحدث تقنيات الرصد الميداني، من الأجهزة الكلاسيكية إلى حلول المسح ثلاثي الأبعاد والجوي المتقدمة.</p>
+
+    <div class="equip-grid">
+      <!-- Total Station -->
+      <div class="equip-card">
+        <span class="equip-tag mono">TS-01</span>
+        <div class="equip-icon">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 88 L45 55 L70 88"/>
+            <path d="M50 88 L45 55 L50 88"/>
+            <path d="M30 88 L60 88"/>
+            <rect x="34" y="38" width="22" height="17" rx="2"/>
+            <circle cx="45" cy="46.5" r="4.2"/>
+            <path d="M56 44 L78 30" stroke-dasharray="2 4"/>
+            <circle cx="80" cy="28" r="3"/>
+            <path d="M45 38 L45 30"/>
+          </svg>
+        </div>
+        <h3>محطة رصد شاملة (Total Station)</h3>
+        <p>قياس زوايا ومسافات دقيقة وتحديد الإحداثيات في الوقت الحقيقي لأعمال الرفع والتنفيذ.</p>
+        <div class="equip-spec">
+          <span class="tag">Leica</span>
+          <span class="tag">Trimble</span>
+          <span class="tag">دقة ملم</span>
+        </div>
+      </div>
+
+      <!-- 3D Laser Scanner -->
+      <div class="equip-card">
+        <span class="equip-tag mono">LS-02</span>
+        <div class="equip-icon">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="34" y="60" width="32" height="24" rx="4"/>
+            <circle cx="50" cy="52" r="11"/>
+            <circle cx="50" cy="52" r="4"/>
+            <path d="M50 52 L70 66" stroke-dasharray="2 4"/>
+            <path d="M28 30a22 22 0 0 1 44 0" stroke-dasharray="3 5"/>
+            <path d="M20 40a30 30 0 0 1 60 0" stroke-dasharray="3 5"/>
+            <path d="M66 84 L74 90 M34 84 L26 90"/>
+          </svg>
+        </div>
+        <h3>ماسح ليزري ثلاثي الأبعاد</h3>
+        <p>التقاط سُحُب نقطية (Point Cloud) عالية الكثافة للمنشآت والمواقع لأغراض التوثيق وBIM.</p>
+        <div class="equip-spec">
+          <span class="tag">Point Cloud</span>
+          <span class="tag">3D Scanning</span>
+          <span class="tag">BIM</span>
+        </div>
+      </div>
+
+      <!-- Drone / UAV -->
+      <div class="equip-card">
+        <span class="equip-tag mono">UAV-03</span>
+        <div class="equip-icon">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="42" y="44" width="16" height="12" rx="3"/>
+            <path d="M42 48 L22 34 M58 48 L78 34 M42 52 L22 66 M58 52 L78 66"/>
+            <circle cx="20" cy="31" r="8"/>
+            <circle cx="80" cy="31" r="8"/>
+            <circle cx="20" cy="69" r="8"/>
+            <circle cx="80" cy="69" r="8"/>
+            <path d="M50 56 L50 78" stroke-dasharray="2 4"/>
+            <path d="M40 84 L60 84 L50 90 Z"/>
+          </svg>
+        </div>
+        <h3>طائرة مسح جوية (Drone)</h3>
+        <p>مسح جوي فوتوغرامتري لإنتاج نماذج تضاريس رقمية وخرائط أورثوموزاييك للمواقع الواسعة.</p>
+        <div class="equip-spec">
+          <span class="tag">Photogrammetry</span>
+          <span class="tag">Orthomosaic</span>
+          <span class="tag">DTM/DEM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <span class="eyebrow">01 <span class="mono">/ SUMMARY</span></span>
+    <h2 class="section-title">نبذة عني</h2>
+
+    <div class="about-grid">
+      <div>
+        <p>مهندس مساحة وحقل ذو توجه <b>يركز على السلامة</b>، أمتلك محفظة أعمال متنوعة تمتد بين مشاريع <b>النفط والغاز، البنية التحتية، والتطوير السكني</b>. حاصل على شهادات في معايير السلامة H2S وSCBA، مع تركيز تشغيلي قوي على الامتثال لأنظمة تصاريح العمل (PTW) وبروتوكولات البيئات الخطرة.</p>
+        <p>تشمل خبرتي تنفيذ المسح الطبوغرافي عالي الدقة، وتخطيط مسارات خطوط الأنابيب، وتحليل البيانات الجغرافية المكانية باستخدام أجهزة <b>GNSS والمحطات الشاملة</b> وبرامج <b>GIS وCivil 3D</b> المتقدمة. لدي سجل مثبت في التعاون مع مطوري العقارات والمقاولين الدوليين لتحقيق نتائج دقيقة ومضمونة الجودة، إلى جانب مهارة في قيادة الطواقم الميدانية وتحسين سير العمل لتلبية المواعيد النهائية الصارمة ومعايير HSE.</p>
+      </div>
+      <div class="fact-list">
+        <div class="fact"><span>التخصص</span><span>Surveying &amp; GIS</span></div>
+        <div class="fact"><span>الموقع</span><span>Basra, Iraq</span></div>
+        <div class="fact"><span>سنوات الخبرة العملية</span><span>+4 مشاريع رئيسية</span></div>
+        <div class="fact"><span>اللغات</span><span>AR / EN</span></div>
+        <div class="fact"><span>شهادة السلامة</span><span>H2S &amp; SCBA</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience" class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">02 <span class="mono">/ CAREER PATH</span></span>
+    <h2 class="section-title">الخبرة المهنية</h2>
+    <p class="section-sub">أربع محطات مهنية جمعت بين قطاع الطاقة، البنية التحتية، وشبكات الألياف الضوئية.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-role">مهندس مساحة</div>
+        <span class="tl-org">Al-Rawabi Real Estate Development Group</span>
+        <ul>
+          <li><b>حساب الكميات والأعمال الترابية:</b> تنفيذ حسابات دقيقة لأحجام الأعمال الترابية وجداول الكميات لضمان الكفاءة الاقتصادية.</li>
+          <li><b>التوثيق كما تم تنفيذه (As-built):</b> إجراء مسوحات شاملة للبنية التحتية الحيوية، تشمل خزانات المياه والشبكات الكهربائية وشبكات الصرف الصحي والطرق المعبدة.</li>
+          <li><b>جرد بيانات واسع النطاق:</b> قيادة عملية جرد فني شامل لمشروع Empire Downtown السكني (+800 وحدة سكنية)، وتصنيف وتوثيق الحالة الإنشائية لكل عقار من الأساسات إلى الإنجاز الإنشائي الكامل.</li>
+          <li><b>التسوية الدقيقة:</b> تنفيذ عمليات تسوية عالية الدقة وفحوصات توزيع الأحمال الإنشائية للمباني قبل صب الخرسانة.</li>
+          <li><b>الضبط الجيوديسي:</b> تأسيس وتصحيح نقاط الارتكاز (Benchmarks) ونقاط الضبط الثانوية لضمان مرجعية موقعية موثوقة.</li>
+          <li><b>الدعم والتوجيه الفني:</b> العمل كقائد فني، وتقديم التوجيه والتدريب للطواقم الميدانية لرفع الإنتاجية والسلامة.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-role">مهندس مساحة</div>
+        <span class="tl-org">Sicim — مشروع منطقة عقد غرب القرنة (المرحلة 2)</span>
+        <ul>
+          <li><b>تنفيذ مسار خطوط الأنابيب:</b> تنفيذ مسوحات طبوغرافية عالية الدقة لشبكة أنابيب مزدوجة بطول 17 كم تربط بين Well Pad 4 وWell Pad 9، مع الالتزام الصارم بحدود تصميم EPC.</li>
+          <li><b>تأسيس الشبكة الجيوديسية:</b> تأسيس والتحقق من 12 نقطة ارتكاز رئيسية على طول المسارات المزدوجة باستخدام مسح GNSS الساكن والتسوية الدقيقة.</li>
+          <li><b>تكامل Civil 3D وGIS:</b> استخدام AutoCAD Civil 3D وGIS لمعالجة البيانات الميدانية الخام، وإنتاج جداول محاذاة ومقاطع طولية تفصيلية لتحديد أي تعارضات محتملة في البنية التحتية.</li>
+          <li><b>تحليل البيانات وضبط الجودة:</b> إجراء المعالجة اللاحقة لبيانات المسح لضمان دقة بمستوى الميليمتر، بالتعاون مع فرق ضبط الجودة لإعداد تقارير المسح والتوثيق النهائي.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-role">مهندس مساحة</div>
+        <span class="tl-org">HAZRAF Engineering</span>
+        <ul>
+          <li>العمل كمهندس مساحة بالتعاون مع مدير المشروع ومهندس ضبط الجودة في تحديد مواقع العناصر الجاهزة (Precast) وإعداد مخططات ما تم تنفيذه (As-built).</li>
+          <li>إعداد التقارير الأولية والنهائية، بما في ذلك مخططات As-built باستخدام Civil 3D.</li>
+          <li>التعاون مع الفريق الميكانيكي لتحديد المناسيب واتجاهات خطوط الأنابيب.</li>
+          <li>العمل مع مدير المشروع لإكمال جداول المحاذاة (Alignment Sheets) لمشروع خط أنابيب بقطر 14 إنش، بما في ذلك المخرجات النهائية وحل المشكلات المتعلقة بمسار الأنابيب.</li>
+          <li>التعاون مع فريق ضبط الجودة الميكانيكي لمسح الوصلات وإعداد تقارير المسح ذات الصلة.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-role">مهندس مسح وتصميم FTTH</div>
+        <span class="tl-org">FiberX IQ Company</span>
+        <ul>
+          <li><b>تصميم الشبكة:</b> تطوير تصاميم شاملة لشبكة الكابلات الضوئية في محافظة البصرة، لضمان أفضل تغطية وكفاءة.</li>
+          <li><b>متابعة التنفيذ:</b> الإشراف على تنفيذ تصميم الشبكة والتنسيق مع الفرق الميدانية لضمان الالتزام بمواصفات المشروع والجداول الزمنية.</li>
+          <li><b>التعاون:</b> العمل عن قرب مع مديري المشاريع والمهندسين وأصحاب المصلحة لمواءمة أهداف المشروع وحل قضايا التصميم أو التنفيذ.</li>
+          <li><b>التوثيق:</b> إعداد وثائق مشروع تفصيلية، تشمل مخططات التصميم وتقارير التقدم ومخططات As-built النهائية.</li>
+          <li><b>ضمان الجودة:</b> إجراء مسوحات وتفتيشات ميدانية للتحقق من جودة ودقة تركيب الشبكة.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">FLAGSHIP WORK</span></span>
+    <h2 class="section-title">المشاريع الرئيسية</h2>
+    <p class="section-sub">نماذج موثقة من مشاريع تنفيذية في قطاع النفط والغاز، التطوير العقاري، وشبكات الاتصالات.</p>
+
+    <!-- PROJECT 1 -->
+    <div class="project-card">
+      <div class="project-visual">
+        <span class="pv-tag mono">ALIGNMENT SHEET</span>
+        <svg viewBox="0 0 200 100" fill="none" stroke="var(--brass-bright)" stroke-width="1.6" stroke-linecap="round">
+          <path d="M5 70 L40 55 L75 60 L110 40 L145 45 L195 25" stroke-dasharray="4 4"/>
+          <circle cx="5" cy="70" r="3" fill="var(--brass-bright)"/>
+          <circle cx="75" cy="60" r="3" fill="var(--brass-bright)"/>
+          <circle cx="145" cy="45" r="3" fill="var(--brass-bright)"/>
+          <circle cx="195" cy="25" r="3" fill="var(--brass-bright)"/>
+          <path d="M5 85 h190" stroke="var(--line)"/>
+          <path d="M5 85v-4M45 85v-4M85 85v-4M125 85v-4M165 85v-4" stroke="var(--line)"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-head">
+          <h3>West Qurna 2 — مشروع محاذاة خط الأنابيب</h3>
+          <span class="p-client mono">CLIENT: SICIM S.P.A</span>
+        </div>
+        <p class="project-desc">تنفيذ مسوحات طبوغرافية عالية الدقة لشبكة أنابيب مزدوجة ضمن عقد المرحلة الثانية لحقل غرب القرنة، تربط بين منصتي الآبار 4 و9، بالتوافق الكامل مع حدود التصميم الهندسي (EPC).</p>
+        <div class="project-stats">
+          <div class="p-stat"><div class="p-num">17 كم</div><div class="p-lbl">طول المسار المزدوج</div></div>
+          <div class="p-stat"><div class="p-num">12</div><div class="p-lbl">نقطة ارتكاز (Benchmarks)</div></div>
+          <div class="p-stat"><div class="p-num">دقة ملم</div><div class="p-lbl">مستوى المعالجة اللاحقة</div></div>
+          <div class="p-stat"><div class="p-num">Basra, IQ</div><div class="p-lbl">الموقع</div></div>
+        </div>
+        <div class="project-cols" style="grid-template-columns:1fr 1fr;margin-bottom:6px;">
+          <div>
+            <h5>المشكلة (Challenge)</h5>
+            <ul>
+              <li>تحديد مسار مزدوج دقيق لخط أنابيب بطول 17 كم عبر تضاريس حقل نفطي نشط دون التأثير على الحفر القائمة</li>
+              <li>الحاجة لشبكة ضبط جيوديسية موثوقة تخدم كل مراحل الإنشاء اللاحقة (Route Selection &amp; Control)</li>
+            </ul>
+          </div>
+          <div>
+            <h5>ماذا فعلت (Action)</h5>
+            <ul>
+              <li>تنفيذ مسح GNSS الساكن وتسوية دقيقة لتأسيس 12 نقطة ارتكاز رئيسية</li>
+              <li>معالجة البيانات وإنتاج جداول محاذاة ومقاطع طولية عبر Civil 3D</li>
+              <li>فحص تعارضات البنية التحتية القائمة قبل التنفيذ</li>
+            </ul>
+          </div>
+        </div>
+        <div class="project-cols">
+          <div>
+            <h5>الأدوات المستخدمة</h5>
+            <ul>
+              <li>GNSS Static Survey</li>
+              <li>AutoCAD Civil 3D</li>
+              <li>Total Station (Post-processing QC)</li>
+            </ul>
+          </div>
+          <div>
+            <h5>النتيجة (Result)</h5>
+            <ul>
+              <li>تسليم شبكة ضبط جيوديسية موثوقة لجميع مراحل الإنشاء اللاحقة</li>
+              <li>تقارير مسح وتوثيق As-built معتمدة من فرق ضبط الجودة</li>
+              <li>صفر تعارضات غير مكتشفة أثناء التنفيذ</li>
+            </ul>
+          </div>
+        </div>
+        <div class="img-slots">
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            خريطة مسار الأنابيب<b>west-qurna-map.jpg</b>
+          </div>
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v9"/></svg>
+            لقطة Civil 3D للمحاذاة<b>west-qurna-civil3d.jpg</b>
+          </div>
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="12" rx="2"/><circle cx="12" cy="13" r="3.2"/><path d="M9 7l1.5-2h3L15 7"/></svg>
+            صورة ميدانية من الموقع<b>west-qurna-field.jpg</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 2 -->
+    <div class="project-card">
+      <div class="project-visual">
+        <span class="pv-tag mono">SITE INVENTORY</span>
+        <svg viewBox="0 0 200 100" fill="none" stroke="var(--brass-bright)" stroke-width="1.4">
+          <rect x="14" y="18" width="26" height="26"/><rect x="46" y="18" width="26" height="26"/><rect x="78" y="18" width="26" height="26"/>
+          <rect x="14" y="50" width="26" height="26"/><rect x="46" y="50" width="26" height="26" stroke-dasharray="3 3"/><rect x="78" y="50" width="26" height="26"/>
+          <rect x="118" y="18" width="26" height="26" stroke-dasharray="3 3"/><rect x="150" y="18" width="26" height="26"/>
+          <rect x="118" y="50" width="26" height="26"/><rect x="150" y="50" width="26" height="26" stroke-dasharray="3 3"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-head">
+          <h3>Empire Downtown — مشروع الجرد الفني والمسح السكني</h3>
+          <span class="p-client mono">CLIENT: AL-RAWABI REAL ESTATE</span>
+        </div>
+        <p class="project-desc">قيادة عملية جرد فني شامل لمشروع سكني كبير، مع توثيق الحالة الإنشائية لكل وحدة وحساب كميات الأعمال الترابية، لتوفير قاعدة بيانات دقيقة لإحياء المشروع وتطويره.</p>
+        <div class="project-stats">
+          <div class="p-stat"><div class="p-num">800+</div><div class="p-lbl">وحدة سكنية</div></div>
+          <div class="p-stat"><div class="p-num">As-Built</div><div class="p-lbl">خزانات، كهرباء، صرف صحي</div></div>
+          <div class="p-stat"><div class="p-num">✓</div><div class="p-lbl">حسابات الأعمال الترابية</div></div>
+          <div class="p-stat"><div class="p-num">Basra, IQ</div><div class="p-lbl">الموقع</div></div>
+        </div>
+        <div class="project-cols" style="grid-template-columns:1fr 1fr;margin-bottom:6px;">
+          <div>
+            <h5>المشكلة (Challenge)</h5>
+            <ul>
+              <li>مشروع سكني متوقف يضم 800+ وحدة بلا قاعدة بيانات موثقة لحالته الإنشائية الفعلية</li>
+              <li>الحاجة لحصر دقيق يدعم قرار إحياء المشروع وإعادة جدولة الأعمال</li>
+            </ul>
+          </div>
+          <div>
+            <h5>ماذا فعلت (Action)</h5>
+            <ul>
+              <li>قيادة فريق ميداني لتصنيف كل وحدة من الأساسات حتى الإنجاز الكامل</li>
+              <li>تنفيذ As-built لخزانات المياه والكهرباء والصرف الصحي والطرق</li>
+              <li>حسابات كميات الأعمال الترابية وتسوية دقيقة قبل الصب</li>
+            </ul>
+          </div>
+        </div>
+        <div class="project-cols">
+          <div>
+            <h5>الأدوات المستخدمة</h5>
+            <ul>
+              <li>Total Station &amp; Digital Level</li>
+              <li>AutoCAD Civil 3D</li>
+              <li>Excel لتنظيم قاعدة بيانات الوحدات</li>
+            </ul>
+          </div>
+          <div>
+            <h5>النتيجة (Result)</h5>
+            <ul>
+              <li>قاعدة بيانات شاملة استُخدمت كأساس لقرار إحياء المشروع</li>
+              <li>تقليل زمن حصر الوحدات عبر تنظيم فرق العمل الميدانية</li>
+              <li>تقارير حالة دقيقة لكل وحدة من أصل 800+ وحدة</li>
+            </ul>
+          </div>
+        </div>
+        <div class="img-slots">
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            مخطط توزيع الوحدات<b>empire-downtown-map.jpg</b>
+          </div>
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v9"/></svg>
+            لقطة GIS لحالة الوحدات<b>empire-downtown-gis.jpg</b>
+          </div>
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="12" rx="2"/><circle cx="12" cy="13" r="3.2"/><path d="M9 7l1.5-2h3L15 7"/></svg>
+            صورة ميدانية من الموقع<b>empire-downtown-field.jpg</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 3 -->
+    <div class="project-card">
+      <div class="project-visual">
+        <span class="pv-tag mono">FIBER NETWORK MAP</span>
+        <svg viewBox="0 0 200 100" fill="none" stroke="var(--brass-bright)" stroke-width="1.6" stroke-linecap="round">
+          <circle cx="30" cy="50" r="4"/>
+          <path d="M30 50 L70 30 M30 50 L70 70 M70 30 L120 20 M70 70 L120 80 M120 20 L165 35 M120 80 L165 60"/>
+          <circle cx="70" cy="30" r="3"/><circle cx="70" cy="70" r="3"/>
+          <circle cx="120" cy="20" r="3"/><circle cx="120" cy="80" r="3"/>
+          <circle cx="165" cy="35" r="3"/><circle cx="165" cy="60" r="3"/>
+        </svg>
+      </div>
+      <div class="project-body">
+        <div class="project-head">
+          <h3>FTTH — تصميم شبكة الألياف الضوئية</h3>
+          <span class="p-client mono">CLIENT: FIBERX IQ</span>
+        </div>
+        <p class="project-desc">تصميم شامل لشبكة الكابلات الضوئية FTTH في محافظة البصرة، مع الإشراف على تنفيذها ميدانياً وضمان جودة التركيب النهائي.</p>
+        <div class="project-stats">
+          <div class="p-stat"><div class="p-num">تغطية واسعة</div><div class="p-lbl">محافظة البصرة</div></div>
+          <div class="p-stat"><div class="p-num">GIS</div><div class="p-lbl">تخطيط المسارات</div></div>
+          <div class="p-stat"><div class="p-num">As-Built</div><div class="p-lbl">مخططات التنفيذ النهائي</div></div>
+          <div class="p-stat"><div class="p-num">Basra, IQ</div><div class="p-lbl">الموقع</div></div>
+        </div>
+        <div class="project-cols" style="grid-template-columns:1fr 1fr;margin-bottom:6px;">
+          <div>
+            <h5>المشكلة (Challenge)</h5>
+            <ul>
+              <li>الحاجة لتصميم شبكة ألياف ضوئية تغطي مناطق واسعة من محافظة البصرة بأقل تكلفة مسار</li>
+              <li>ضمان تطابق التنفيذ الميداني مع التصميم النظري لتفادي إعادة العمل</li>
+            </ul>
+          </div>
+          <div>
+            <h5>ماذا فعلت (Action)</h5>
+            <ul>
+              <li>تصميم مسارات الشبكة باستخدام أدوات GIS</li>
+              <li>التنسيق مع الفرق الميدانية لضمان الالتزام بالمواصفات</li>
+              <li>تفتيش الجودة أثناء التركيب وتوثيق As-built</li>
+            </ul>
+          </div>
+        </div>
+        <div class="project-cols">
+          <div>
+            <h5>الأدوات المستخدمة</h5>
+            <ul>
+              <li>GIS Network Design Tools</li>
+              <li>AutoCAD</li>
+              <li>تقارير ميدانية وتفتيش جودة</li>
+            </ul>
+          </div>
+          <div>
+            <h5>النتيجة (Result)</h5>
+            <ul>
+              <li>تغطية محسّنة وكفاءة أعلى في توزيع الشبكة</li>
+              <li>توثيق كامل As-built جاهز للتسليم</li>
+              <li>تنفيذ مطابق للمواصفات دون إعادة عمل</li>
+            </ul>
+          </div>
+        </div>
+        <div class="img-slots">
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            خريطة مسار الشبكة<b>ftth-network-map.jpg</b>
+          </div>
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v9"/></svg>
+            لقطة GIS للتصميم<b>ftth-gis-design.jpg</b>
+          </div>
+          <div class="img-slot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="7" width="16" height="12" rx="2"/><circle cx="12" cy="13" r="3.2"/><path d="M9 7l1.5-2h3L15 7"/></svg>
+            صورة ميدانية من التركيب<b>ftth-field.jpg</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GIS PORTFOLIO -->
+<section id="gis-portfolio" class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">GIS CAPABILITIES</span></span>
+    <h2 class="section-title">GIS Portfolio</h2>
+    <p class="section-sub">مجالات تطبيق GIS التي أعمل بها لدعم المشاريع الهندسية بتحليلات مكانية واضحة وقابلة للاستخدام.</p>
+
+    <div class="gis-grid">
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('webgis')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M9 9v9"/></svg></div><h4>Web GIS Dashboard</h4><p>لوحات بيانات تفاعلية لعرض ومتابعة مؤشرات المشاريع مكانياً.</p></div>
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('arcgis')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4l6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></div><h4>ArcGIS Project</h4><p>بناء وتحليل بيانات مكانية باستخدام ArcMap وArcGIS Pro.</p></div>
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('qgis')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg></div><h4>QGIS Project</h4><p>معالجة وتحليل الطبقات الجغرافية عبر بيئة QGIS مفتوحة المصدر.</p></div>
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('storymap')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></div><h4>Story Map</h4><p>سرد قصص مكانية تفاعلية لتوضيح مراحل المشاريع الميدانية.</p></div>
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('spatial')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l5-10 4 6 3-5 4 9"/></svg></div><h4>Spatial Analysis</h4><p>تحليلات مكانية لدعم القرارات الهندسية والتخطيطية.</p></div>
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('suitability')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 14h16M14 4v16"/></svg></div><h4>Suitability Analysis</h4><p>تحديد المواقع الأنسب للمشاريع وفق معايير متعددة.</p></div>
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('network')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8 6h8M6 8v8M18 8v8M8 18h8"/></svg></div><h4>Network Analysis</h4><p>تحليل شبكات خطوط الأنابيب والطرق ومسارات الكابلات.</p></div>
+      <div class="gis-card" style="cursor:pointer" onclick="openGisModal('remote')"><div class="gis-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4l16 16M4 20L20 4"/><circle cx="12" cy="12" r="9"/></svg></div><h4>Remote Sensing</h4><p>استخلاص المعلومات من الصور الفضائية والجوية للمواقع.</p></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--text-dim);margin-top:18px;">💡 اضغط على أي بطاقة لعرض التفاصيل الكاملة.</p>
+  </div>
+</section>
+
+<!-- EMERGING TECH -->
+<section>
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">WHAT'S NEXT</span></span>
+    <h2 class="section-title">تقنيات ناشئة أتابعها وأدمجها في عملي</h2>
+    <p class="section-sub">تطوير مستمر يتجاوز المساحة التقليدية نحو الحلول الجيومكانية الذكية.</p>
+    <div class="tag-row">
+      <span class="tag">AI for GIS</span>
+      <span class="tag">GeoAI</span>
+      <span class="tag">Machine Learning</span>
+      <span class="tag">Remote Sensing</span>
+      <span class="tag">UAV Mapping</span>
+      <span class="tag">LiDAR</span>
+      <span class="tag">BIM Integration</span>
+      <span class="tag">Digital Twin</span>
+      <span class="tag">Web GIS</span>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">HOW I CAN HELP</span></span>
+    <h2 class="section-title">الخدمات</h2>
+    <div class="cluster-grid">
+      <div class="cluster"><h4>SURVEYING</h4><div class="tag-row">
+        <span class="tag">Topographic Survey</span><span class="tag">As-Built Survey</span><span class="tag">Quantity Calculations</span><span class="tag">Pipeline Alignment</span>
+      </div></div>
+      <div class="cluster"><h4>GIS &amp; DATA</h4><div class="tag-row">
+        <span class="tag">GIS Database Development</span><span class="tag">Spatial Analysis</span><span class="tag">Web GIS Development</span>
+      </div></div>
+      <div class="cluster"><h4>MAPPING &amp; BIM</h4><div class="tag-row">
+        <span class="tag">Drone Mapping</span><span class="tag">BIM &amp; GIS Integration</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-inner">
+    <span class="eyebrow">03 <span class="mono">/ CORE COMPETENCIES</span></span>
+    <h2 class="section-title">مهاراتي</h2>
+    <p class="section-sub">خبرة ميدانية ومكتبية تمتد بين قطاع النفط والغاز، البنى التحتية، والمشاريع السكنية، مبنية على الدقة والالتزام بمعايير السلامة.</p>
+
+    <div class="skills-grid">
+      <div class="skill-card">
+        <span class="skill-num">01</span>
+        <div class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 20L10 8l4 6 3-4 3 10"/><circle cx="10" cy="8" r="1.3"/></svg></div>
+        <h3>المساحة عالية الدقة</h3>
+        <p>رفع طبوغرافي، تأسيس نقاط ضبط جيوديسية (Benchmarks)، وحسابات كميات الأعمال الترابية.</p>
+      </div>
+      <div class="skill-card">
+        <span class="skill-num">02</span>
+        <div class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg></div>
+        <h3>الرسم الهندسي و GIS</h3>
+        <p>إتقان AutoCAD Civil 3D وArcGIS وGlobal Mapper لإنتاج المخططات وتحليل البيانات الجغرافية.</p>
+      </div>
+      <div class="skill-card">
+        <span class="skill-num">03</span>
+        <div class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2.5"/></svg></div>
+        <h3>أجهزة القياس الميدانية</h3>
+        <p>احترافية في تشغيل أجهزة GNSS (Static &amp; RTK) وTotal Stations (Leica/Trimble) والمستويات الرقمية.</p>
+      </div>
+      <div class="skill-card">
+        <span class="skill-num">04</span>
+        <div class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z"/></svg></div>
+        <h3>السلامة والامتثال HSE</h3>
+        <p>شهادات H2S وSCBA، وخبرة عملية في أنظمة تصاريح العمل (Permit to Work) في بيئات النفط والغاز.</p>
+      </div>
+      <div class="skill-card">
+        <span class="skill-num">05</span>
+        <div class="skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="7" r="2.4"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6M14.5 20c0-2.6 1.9-4.6 4.5-4.9"/></svg></div>
+        <h3>قيادة الفرق الميدانية</h3>
+        <p>إشراف على طواقم المسح، تدريب وتطوير الكفاءات، وحل المشكلات الميدانية تحت ضغط المواعيد.</p>
+      </div>
+    </div>
+
+    <div class="cluster-grid">
+      <div class="cluster">
+        <h4>SOFTWARE &amp; DIGITAL TOOLS</h4>
+        <div class="tag-row">
+          <span class="tag">AutoCAD Civil 3D</span>
+          <span class="tag">ArcGIS (ArcMap)</span>
+          <span class="tag">Global Mapper</span>
+          <span class="tag">Microsoft Excel</span>
+          <span class="tag">Microsoft 365 Copilot</span>
+        </div>
+      </div>
+      <div class="cluster">
+        <h4>FIELD EQUIPMENT</h4>
+        <div class="tag-row">
+          <span class="tag">GNSS (Static &amp; RTK)</span>
+          <span class="tag">Total Station — Leica</span>
+          <span class="tag">Total Station — Trimble</span>
+          <span class="tag">مستويات رقمية دقيقة</span>
+        </div>
+      </div>
+      <div class="cluster">
+        <h4>OPERATIONAL &amp; SAFETY</h4>
+        <div class="tag-row">
+          <span class="tag">H2S &amp; SCBA</span>
+          <span class="tag">Permit to Work</span>
+          <span class="tag">تقارير QA/QC</span>
+          <span class="tag">جداول المحاذاة</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section>
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">MILESTONES</span></span>
+    <h2 class="section-title">الإنجازات</h2>
+    <div class="ach-grid">
+      <div class="ach-card">
+        <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 5M17 6h3a3 3 0 0 1-3 5"/></svg></div>
+        <p>الأول على دفعة دبلوم المساحة بمعدل 82.73%</p>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20L10 8l4 6 3-4 3 10"/></svg></div>
+        <p>تنفيذ مسح خط أنابيب مزدوج بطول 17 كم في حقل غرب القرنة 2</p>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></div>
+        <p>المشاركة في مشروع جرد سكني يضم أكثر من 800 وحدة</p>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z"/></svg></div>
+        <p>خبرة عملية موثقة في النفط والغاز والبنية التحتية والاتصالات</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">04 <span class="mono">/ EDUCATION</span></span>
+    <h2 class="section-title">التعليم</h2>
+
+    <div class="card-grid">
+      <div class="info-card">
+        <span class="yr">OCT 2019 — OCT 2023</span>
+        <h3>بكالوريوس هندسة المساحة</h3>
+        <span class="org">جامعة بغداد — كلية الهندسة</span>
+        <p>دراسة متخصصة في أساسيات وتقنيات هندسة المساحة والجيوماتكس.</p>
+      </div>
+      <div class="info-card">
+        <span class="yr">OCT 2017 — OCT 2019</span>
+        <h3>دبلوم المساحة</h3>
+        <span class="org">جامعة الفرات الأوسط التقنية — المعهد التقني السماوة</span>
+        <p>الأول على الصف بمعدل تراكمي 82.73%.</p>
+        <span class="badge">الأول على الدفعة</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs">
+  <div class="section-inner">
+    <span class="eyebrow">05 <span class="mono">/ TRAINING</span></span>
+    <h2 class="section-title">الدورات والشهادات</h2>
+    <p class="section-sub">تطوير مستمر بين المهارات التقنية الرقمية ومهارات القيادة والإدارة الاستراتيجية.</p>
+
+    <div class="cert-cards">
+      <div class="cert-card">
+        <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z"/></svg></div>
+        <h4>H2S</h4>
+        <span>STC · Jan 2026</span>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <h4>SCBA</h4>
+        <span>STC · Jan 2026</span>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div>
+        <h4>BIM</h4>
+        <span>Sep 2025</span>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg></div>
+        <h4>ACC</h4>
+        <span>Autodesk · Oct 2025</span>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg></div>
+        <h4>PMP Training</h4>
+        <span>Aug 2025</span>
+      </div>
+    </div>
+
+    <div class="cert-group">
+      <h4>TECHNICAL &amp; DIGITAL ENGINEERING</h4>
+      <div class="cert-list">
+        <div class="cert-row">
+          <div><div class="c-name">تدريب H2S &amp; SCBA</div><div class="c-desc">معايير السلامة للبيئات الخطرة — رقم الشهادة: STC-SB0014 (تنتهي: يناير 2026)</div></div>
+          <div class="c-date">2026</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">نمذجة معلومات البناء (BIM)</div><div class="c-desc">شهادة احترافية في منهجيات وسير عمل BIM</div></div>
+          <div class="c-date">سبتمبر 2025</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">Autodesk Construction Cloud (ACC)</div><div class="c-desc">تدريب متخصص في Autodesk Build عبر مركز تدريب Autodesk المعتمد</div></div>
+          <div class="c-date">أكتوبر 2025</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">أنظمة الإحداثيات المرجعية وتمثيل البيانات المكانية</div><div class="c-desc">GIS and Earth Observation University</div></div>
+          <div class="c-date">2023</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">الذكاء الاصطناعي وMicrosoft Copilot للإنتاجية</div><div class="c-desc">تدريب متخصص في تحليل البيانات وسير العمل الآلي المعتمد على AI</div></div>
+          <div class="c-date">2024</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cert-group">
+      <h4>MANAGEMENT &amp; STRATEGIC LEADERSHIP</h4>
+      <div class="cert-list">
+        <div class="cert-row">
+          <div><div class="c-name">تدريب Project Management Professional (PMP)</div><div class="c-desc">برنامج شامل من 35 ساعة يغطي منهجيات إدارة المشاريع الحديثة والقيادة القائمة على القيمة</div></div>
+          <div class="c-date">أغسطس 2025</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">Strategic Management Professional</div><div class="c-desc">دورة من 30 ساعة تركز على صياغة الاستراتيجية وتنفيذها وتقييمها</div></div>
+          <div class="c-date">نوفمبر 2025</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">إتقان تحديد المخاطر</div><div class="c-desc">ورشة عمل تطبيقية في التعرف المبكر على مخاطر المشاريع وتقييم الفرص</div></div>
+          <div class="c-date">أغسطس 2025</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">تخصص إدارة المشاريع</div><div class="c-desc">التركيز على الميزانية وإدارة المخاطر وقيادة الفريق (Microsoft/LinkedIn)</div></div>
+          <div class="c-date">2024</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">تخصص Microsoft 365 المعتمد</div><div class="c-desc">كفاءة متقدمة في تحسين سير العمل والتعاون</div></div>
+          <div class="c-date">2024</div>
+        </div>
+        <div class="cert-row">
+          <div><div class="c-name">بناء المرونة والتكيف المهني</div><div class="c-desc">LinkedIn Learning</div></div>
+          <div class="c-date">2024</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGES -->
+<section class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">06 <span class="mono">/ LANGUAGES</span></span>
+    <h2 class="section-title">اللغات</h2>
+    <div class="lang-row">
+      <div class="lang-item">
+        <div class="l-name">العربية</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+        <div class="l-level">اللغة الأم</div>
+      </div>
+      <div class="lang-item">
+        <div class="l-name">الإنجليزية</div>
+        <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+        <div class="l-level">كفاءة مهنية للعمل</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">RECOMMENDATIONS</span></span>
+    <h2 class="section-title">التوصيات</h2>
+    <p class="section-sub">مساحة مخصّصة لآراء المشرفين وزملاء العمل — يمكن استبدال النصوص التالية بتوصيات حقيقية عند توفرها.</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <span class="quote-mark">"</span>
+        <p>[أضف هنا تعليق مدير المشروع حول جودة ودقة عملك الميداني]</p>
+        <div class="testi-who">— اسم المدير</div>
+        <div class="testi-role">Project Manager</div>
+      </div>
+      <div class="testi-card">
+        <span class="quote-mark">"</span>
+        <p>[أضف هنا تعليق مهندس ضبط الجودة حول الالتزام بالمواصفات والمواعيد]</p>
+        <div class="testi-who">— اسم المهندس</div>
+        <div class="testi-role">QA/QC Engineer</div>
+      </div>
+      <div class="testi-card">
+        <span class="quote-mark">"</span>
+        <p>[أضف هنا تعليق مدير المساحة حول مهارات القيادة الميدانية]</p>
+        <div class="testi-who">— اسم المدير</div>
+        <div class="testi-role">Survey Manager</div>
+      </div>
+    </div>
+    <div class="testi-note">💡 هذا القسم جاهز للتصميم — أرسل لي نصوص التوصيات الفعلية من مدرائك أو زملائك السابقين لاستبدال هذه العناصر النائبة.</div>
+  </div>
+</section>
+
+<!-- LIVE MAP -->
+<section id="live-map">
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">GEOSPATIAL VIEW</span></span>
+    <h2 class="section-title">Interactive Portfolio Map</h2>
+    <p class="section-sub">خريطة تفاعلية بطبقات قابلة للتبديل توضّح توزيع أعمالي الميدانية: خطوط الأنابيب، المشاريع السكنية، نقاط الضبط، ومهام الطيران. <em>(إحداثيات تقريبية لغرض العرض التوضيحي)</em>.</p>
+    <div class="layer-toggles">
+      <label class="layer-toggle active" id="toggle-pipelines"><input type="checkbox" checked onchange="toggleLayer('pipelines', this.checked, this.parentElement)"> خطوط الأنابيب</label>
+      <label class="layer-toggle active" id="toggle-housing"><input type="checkbox" checked onchange="toggleLayer('housing', this.checked, this.parentElement)"> المشاريع السكنية</label>
+      <label class="layer-toggle active" id="toggle-control"><input type="checkbox" checked onchange="toggleLayer('control', this.checked, this.parentElement)"> نقاط الضبط المساحي</label>
+      <label class="layer-toggle active" id="toggle-uav"><input type="checkbox" checked onchange="toggleLayer('uav', this.checked, this.parentElement)"> مهام UAV</label>
+    </div>
+    <div id="liveMap"></div>
+    <div class="map-legend">
+      <div class="lg-item"><span class="dot" style="background:#4fd1c5"></span> خط أنابيب West Qurna 2 (17 كم)</div>
+      <div class="lg-item"><span class="dot" style="background:#e0bd7d"></span> Empire Downtown (800+ وحدة)</div>
+      <div class="lg-item"><span class="dot" style="background:#f5f5f5"></span> نقاط ضبط جيوديسية (Benchmarks)</div>
+      <div class="lg-item"><span class="dot" style="background:#9aa3ab"></span> منطقة تغطية مسح جوي (UAV)</div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="alt-bg">
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">TECHNICAL WRITING</span></span>
+    <h2 class="section-title">المدونة التقنية</h2>
+    <p class="section-sub">مقالات قصيرة أكتبها لمشاركة خبرتي العملية — يمكن نشرها على LinkedIn أو مدونة شخصية لتحسين ظهورك في محركات البحث.</p>
+    <div class="card-grid">
+      <div class="info-card">
+        <span class="yr">GNSS</span>
+        <h3>RTK مقابل Static GNSS: أيهما تختار؟</h3>
+        <p>مقارنة عملية بين وضعي القياس الأكثر شيوعاً في المسح الحديث، ومتى يكون كل منهما الخيار الأنسب من حيث الدقة وسرعة الإنجاز وطبيعة الموقع.</p>
+      </div>
+      <div class="info-card">
+        <span class="yr">OIL &amp; GAS</span>
+        <h3>دور المساحة في مشاريع النفط والغاز</h3>
+        <p>كيف تدعم عمليات المسح الطبوغرافي وتخطيط المسارات قرارات EPC الحرجة في مشاريع خطوط الأنابيب الكبرى.</p>
+      </div>
+      <div class="info-card">
+        <span class="yr">BIM+GIS</span>
+        <h3>تكامل BIM وGIS في مشاريع البنية التحتية</h3>
+        <p>لماذا أصبح الجمع بين نماذج BIM والتحليل المكاني لـGIS ضرورة لمشاريع الطاقة والبنية التحتية الحديثة.</p>
+      </div>
+    </div>
+    <p style="font-size:12.5px;color:var(--text-dim);margin-top:20px;">💡 هذه عناوين ومقتطفات جاهزة — أرسل لي الموافقة وسأكتب المقال الكامل لأي منها لتنشره.</p>
+  </div>
+</section>
+
+<!-- GITHUB -->
+<section>
+  <div class="section-inner">
+    <span class="eyebrow">↳ <span class="mono">CODE &amp; AUTOMATION</span></span>
+    <h2 class="section-title">Python GIS &amp; GitHub</h2>
+    <p class="section-sub">مساحة جاهزة لعرض مشاريعك البرمجية في تحليل البيانات الجغرافية عند توفرها.</p>
+    <div class="cluster-grid">
+      <div class="cluster"><h4>GEOSPATIAL PYTHON</h4><div class="tag-row">
+        <span class="tag">GeoPandas</span><span class="tag">OSMnx</span><span class="tag">Folium</span><span class="tag">Shapely</span>
+      </div></div>
+      <div class="cluster"><h4>WEB MAPPING</h4><div class="tag-row">
+        <span class="tag">Leaflet</span><span class="tag">MapLibre GL JS</span>
+      </div></div>
+      <div class="cluster"><h4>GITHUB</h4><div class="tag-row">
+        <a href="https://github.com/" target="_blank" rel="noopener" class="tag" style="text-decoration:none;">github.com/YOUR-USERNAME ↗</a>
+      </div></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--text-dim);margin-top:18px;">💡 استبدل الرابط أعلاه بحسابك الفعلي على GitHub عند بدء رفع مشاريعك.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner contact-wrap">
+    <span class="eyebrow">07 <span class="mono">/ GET IN TOUCH</span></span>
+    <h2 class="section-title">تواصل معي</h2>
+    <p class="section-sub">مستعد لمناقشة فرص العمل أو المشاريع الجديدة في مجال المساحة والـ GIS.</p>
+
+    <div class="social-row">
+      <a class="social-btn" href="mailto:abdullahinthaiyer@gmail.com">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 7l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></div>
+        <div class="lbl"><small>البريد الإلكتروني</small><span>abdullahinthaiyer@gmail.com</span></div>
+      </a>
+
+      <a class="social-btn" href="tel:+9647838909213">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg></div>
+        <div class="lbl"><small>الهاتف</small><span>+964 783 890 9213</span></div>
+      </a>
+
+      <a class="social-btn" href="https://www.linkedin.com/in/abdullah-majid12" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 13v4"/></svg></div>
+        <div class="lbl"><small>LinkedIn</small><span>abdullah-majid12</span></div>
+      </a>
+
+      <a class="social-btn" href="https://www.google.com/maps/search/?api=1&query=%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82+%D8%A7%D9%84%D8%A8%D8%B5%D8%B1%D8%A9+%D9%82%D8%B6%D8%A7%D8%A1+%D8%A7%D9%84%D8%B2%D8%A8%D9%8A%D8%B1+%D8%B4%D8%AF%D8%A7%D8%AF+%D8%A7%D9%84%D9%81%D8%A7%D8%B1%D8%B3" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></div>
+        <div class="lbl"><small>الموقع</small><span>البصرة - الزبير - شداد الفارس</span></div>
+      </a>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:36px;">
+      <a href="Abdullah_Majid_CV.pdf" download class="cv-btn ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+        تحميل السيرة الذاتية الكاملة
+      </a>
+      <a href="Abdullah_Majid_CV.pdf" target="_blank" rel="noopener" class="cv-btn ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        معاينة PDF
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="mono">© 2026 — ABDULLAH MAJID INTHAIYER · SURVEYING &amp; GIS ENGINEER</span>
+</footer>
+
+<!-- GIS DETAIL MODAL -->
+<div class="modal-overlay" id="gisModal" onclick="if(event.target===this) closeGisModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeGisModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <h3 id="gisModalTitle">—</h3>
+    <div class="m-sub mono" id="gisModalSub">—</div>
+    <div class="m-section">
+      <h5>الوصف</h5>
+      <p id="gisModalDesc">—</p>
+    </div>
+    <div class="m-section">
+      <h5>الأدوات المستخدمة</h5>
+      <p id="gisModalTools">—</p>
+    </div>
+    <div class="m-section">
+      <h5>التحديات النموذجية</h5>
+      <p id="gisModalChallenges">—</p>
+    </div>
+    <div class="m-section">
+      <h5>القيمة المضافة</h5>
+      <p id="gisModalValue">—</p>
+    </div>
+    <div class="img-slot" style="aspect-ratio:16/9;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M9 9v9"/></svg>
+      <span id="gisModalImgLabel">ضع لقطة شاشة حقيقية هنا</span>
+    </div>
+  </div>
+</div>
+
+<!-- FLOATING CONTROLS -->
+<div class="fab-stack">
+  <button class="fab" id="scrollTopBtn" title="الصعود للأعلى" aria-label="الصعود للأعلى">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+  <button class="fab theme-fab" id="themeToggleBtn" title="تبديل الثيم" aria-label="تبديل الثيم">
+    <svg id="themeIcon" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4.2"/>
+      <path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/>
+    </svg>
+  </button>
+  <button class="fab" id="scrollBottomBtn" title="النزول للأسفل" aria-label="النزول للأسفل">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+</div>
+
+<script>
+  (function(){
+    var body = document.body;
+    var themeBtn = document.getElementById('themeToggleBtn');
+    var themeIcon = document.getElementById('themeIcon');
+    var sunPath = '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/>';
+    var moonPath = '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/>';
+    var isLight = false;
+
+    themeBtn.addEventListener('click', function(){
+      isLight = !isLight;
+      body.classList.toggle('light-theme', isLight);
+      themeIcon.innerHTML = isLight ? moonPath : sunPath;
+      themeBtn.title = isLight ? 'تبديل إلى الثيم الداكن' : 'تبديل إلى الثيم الفاتح';
+    });
+
+    document.getElementById('scrollTopBtn').addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+    document.getElementById('scrollBottomBtn').addEventListener('click', function(){
+      window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+    });
+
+    /* Animated counters */
+    var counters = document.querySelectorAll('.stat-num[data-count]');
+    var counted = new WeakSet();
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting && !counted.has(entry.target)){
+          counted.add(entry.target);
+          var el = entry.target;
+          var target = parseInt(el.getAttribute('data-count'), 10);
+          var current = 0;
+          var duration = 1200;
+          var startTime = null;
+          function step(ts){
+            if(!startTime) startTime = ts;
+            var progress = Math.min((ts - startTime) / duration, 1);
+            current = Math.floor(progress * target);
+            el.textContent = current;
+            if(progress < 1){ requestAnimationFrame(step); }
+            else { el.textContent = target; }
+          }
+          requestAnimationFrame(step);
+        }
+      });
+    }, {threshold:.4});
+    counters.forEach(function(el){ obs.observe(el); });
+
+    /* GIS Portfolio modal */
+    var gisData = {
+      webgis: {title:'Web GIS Dashboard', sub:'WEB MAPPING · REAL-TIME DATA', desc:'لوحات بيانات تفاعلية تجمع طبقات المسح والمشاريع في واجهة واحدة، تتيح لأصحاب المصلحة متابعة تقدم الأعمال مكانياً دون الحاجة لبرامج GIS متخصصة.', tools:'Leaflet, MapLibre GL JS, ArcGIS Online, GeoJSON', challenges:'دمج بيانات من مصادر متعددة (GNSS، Total Station، صور جوية) في طبقة واحدة متسقة ومحدثة.', value:'يسرّع اتخاذ القرار الميداني ويقلل الاعتماد على التقارير الورقية الثابتة.'},
+      arcgis: {title:'ArcGIS Project', sub:'ESRI ECOSYSTEM', desc:'بناء وتحليل قواعد بيانات جغرافية باستخدام ArcMap وArcGIS Pro، من رقمنة الطبقات إلى إنتاج خرائط تحليلية جاهزة للتقارير.', tools:'ArcGIS Pro, ArcMap, ArcGIS Online', challenges:'ضمان دقة الإسقاط الجغرافي (Projection) وتوحيد أنظمة الإحداثيات بين مصادر البيانات المختلفة.', value:'قاعدة بيانات مكانية موثوقة قابلة لإعادة الاستخدام عبر مشاريع متعددة.'},
+      qgis: {title:'QGIS Project', sub:'OPEN SOURCE GIS', desc:'معالجة وتحليل الطبقات الجغرافية عبر بيئة QGIS مفتوحة المصدر، بديل فعّال من حيث التكلفة لمشاريع التحليل المكاني.', tools:'QGIS, GDAL/OGR, Processing Toolbox', challenges:'تحسين أداء المعالجة مع طبقات بيانات كبيرة الحجم (Point Clouds, Raster عالي الدقة).', value:'حلول تحليل مكاني مرنة دون تكاليف تراخيص إضافية.'},
+      storymap: {title:'Story Map', sub:'NARRATIVE MAPPING', desc:'سرد قصص مكانية تفاعلية توثق مراحل تنفيذ المشروع خطوة بخطوة، من المسح الأولي وحتى التسليم النهائي.', tools:'ArcGIS StoryMaps, Web design', challenges:'تحويل بيانات مسح تقنية جافة إلى سرد بصري مفهوم لغير المتخصصين.', value:'أداة تواصل فعالة مع العملاء والإدارة العليا لعرض تقدم العمل.'},
+      spatial: {title:'Spatial Analysis', sub:'GEOSPATIAL DECISION SUPPORT', desc:'تحليلات مكانية (Buffer, Overlay, Proximity) لدعم قرارات التخطيط الهندسي وتوزيع الموارد الميدانية.', tools:'ArcGIS Pro, QGIS, Python (GeoPandas)', challenges:'اختيار المعايير المكانية المناسبة لكل سياق هندسي لتفادي نتائج مضللة.', value:'قرارات تخطيط مبنية على بيانات دقيقة بدل التقدير اليدوي.'},
+      suitability: {title:'Suitability Analysis', sub:'MULTI-CRITERIA EVALUATION', desc:'تحديد المواقع الأنسب لعناصر المشروع (نقاط ضبط، مسارات، مرافق) وفق معايير متعددة ومرجّحة.', tools:'ArcGIS Spatial Analyst, Weighted Overlay', challenges:'الموازنة بين معايير فنية وبيئية ولوجستية متعارضة أحياناً.', value:'تقليل المخاطر الهندسية عبر اختيار مواقع مدروسة بيانياً.'},
+      network: {title:'Network Analysis', sub:'LINEAR INFRASTRUCTURE', desc:'تحليل شبكات خطية مثل خطوط الأنابيب، الطرق، ومسارات الكابلات لتحديد أقصر/أفضل مسار وتحديد نقاط الالتقاء الحرجة.', tools:'ArcGIS Network Analyst, QGIS Network Analysis', challenges:'إدماج قيود تصميم هندسية (EPC) ضمن نموذج الشبكة التحليلي.', value:'مسارات محسّنة تراعي القيود الهندسية والتكلفة معاً.'},
+      remote: {title:'Remote Sensing', sub:'SATELLITE & AERIAL IMAGERY', desc:'استخلاص معلومات من الصور الفضائية والجوية (تصنيف الأراضي، رصد التغيرات) لدعم التخطيط والمسح الأولي للمواقع.', tools:'QGIS, Sentinel/Landsat Imagery, UAV Orthomosaics', challenges:'معايرة الصور وتصحيحها هندسياً وإشعاعياً قبل التحليل.', value:'رؤية شاملة للموقع قبل النزول الميداني، ما يقلل زمن المسح الأرضي.'}
+    };
+    window.openGisModal = function(key){
+      var d = gisData[key];
+      if(!d) return;
+      document.getElementById('gisModalTitle').textContent = d.title;
+      document.getElementById('gisModalSub').textContent = d.sub;
+      document.getElementById('gisModalDesc').textContent = d.desc;
+      document.getElementById('gisModalTools').textContent = d.tools;
+      document.getElementById('gisModalChallenges').textContent = d.challenges;
+      document.getElementById('gisModalValue').textContent = d.value;
+      document.getElementById('gisModalImgLabel').textContent = 'ضع لقطة شاشة حقيقية هنا: ' + key + '-screenshot.jpg';
+      document.getElementById('gisModal').classList.add('open');
+    };
+    window.closeGisModal = function(){
+      document.getElementById('gisModal').classList.remove('open');
+    };
+
+    /* Interactive layered map */
+    var mapLayers = {};
+    if(window.L && document.getElementById('liveMap')){
+      var map = L.map('liveMap', {scrollWheelZoom:false}).setView([30.5, 47.45], 9);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:18
+      }).addTo(map);
+
+      /* Pipelines layer: West Qurna 2 alignment (demo coordinates) */
+      var pipelinePts = [[30.3925,47.6994],[30.42,47.55],[30.4667,47.2333]];
+      mapLayers.pipelines = L.layerGroup([
+        L.polyline(pipelinePts, {color:'#4fd1c5', weight:3, dashArray:'6 6'}),
+        L.circleMarker(pipelinePts[2], {radius:8, color:'#4fd1c5', fillColor:'#4fd1c5', fillOpacity:1}).bindPopup('West Qurna 2 — محاذاة خط الأنابيب (17 كم)')
+      ]).addTo(map);
+
+      /* Housing project layer: Empire Downtown (demo location near Basra) */
+      mapLayers.housing = L.layerGroup([
+        L.circleMarker([30.53, 47.79], {radius:9, color:'#e0bd7d', fillColor:'#e0bd7d', fillOpacity:1}).bindPopup('Empire Downtown — 800+ وحدة سكنية')
+      ]).addTo(map);
+
+      /* Survey control points along pipeline (demo) */
+      var controlPts = [[30.40,47.63],[30.415,47.58],[30.43,47.52],[30.45,47.42],[30.46,47.30]];
+      var controlMarkers = controlPts.map(function(pt,i){
+        return L.circleMarker(pt, {radius:4, color:'#f5f5f5', fillColor:'#f5f5f5', fillOpacity:1}).bindPopup('BM-'+(i+1)+' نقطة ضبط جيوديسية');
+      });
+      mapLayers.control = L.layerGroup(controlMarkers).addTo(map);
+
+      /* UAV coverage area (demo polygon) */
+      mapLayers.uav = L.layerGroup([
+        L.polygon([[30.55,47.75],[30.55,47.82],[30.50,47.82],[30.50,47.75]], {color:'#9aa3ab', weight:1.5, fillOpacity:.08}).bindPopup('منطقة تغطية مسح جوي تجريبية (UAV)')
+      ]).addTo(map);
+
+      window.toggleLayer = function(name, checked, labelEl){
+        if(!mapLayers[name]) return;
+        if(checked){ map.addLayer(mapLayers[name]); labelEl.classList.add('active'); }
+        else { map.removeLayer(mapLayers[name]); labelEl.classList.remove('active'); }
+      };
+    }
+  })();
+</script>
+
+</body>
+</html>
